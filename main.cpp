@@ -4,6 +4,7 @@
 
 using namespace std;
 
+
 int main() {
 
   char board[9][9];
@@ -35,7 +36,7 @@ int main() {
   }
   cout << "complete.\n\n";
 
-  cout << "=================== Question 2 ===================\n\n";
+  /*cout << "=================== Question 2 ===================\n\n";
 
   load_board("easy.dat", board);
 
@@ -83,7 +84,8 @@ int main() {
 
   cout << "=================== Question 5 ===================\n\n";
 
-  // write more tests
+  // write more tests */
 
   return 0;
 }
+	
