@@ -45,7 +45,7 @@ int main() {
 
   // Should be OK
   cout << "Putting '1' into I8 is ";
-  if (!make_move("I6", '1', board)) {
+  if (!make_move("I8", '1', board)) {
     cout << "NOT ";
   }
   cout << "a valid move. The board is:\n";
@@ -102,9 +102,12 @@ bool make_move(const char *position, const int digit, char board[9][9]){
   
   if (*(position + 1) < 49 || *(position + 1) > 57)
     return false;
-  
-  assert(contains_num(board, *position - '@', *(position + 1) - '0') == true);
 
+  cout << static_cast<int>(*position - '@');
+  cout << static_cast<int>(*(position + 1) - '0');
+
+  if (contains_num(board, (*position - '@') - 1, (*(position + 1) - '0') - 1) == true)
+      return false;
 
   return true;
 }
