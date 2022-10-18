@@ -95,9 +95,19 @@ bool contains_num(const char board[9][9], int row, int col){
 /* Function that places a digit onto the board */
 //bool make_move(const char *position, char digit, char board[9][9]){
 
-  // check if the position is already occupied by another character
+  // check if the position is already occupied by another character (function), if true then return invalid (false) 
+
+// check if the number is already present in the column (function), if true then return invalid (false)
+
+// check if the number is already present in the row (function), if true then return invalid (false)
+
+// check if the number is already present in the box (function), if true then return invalid (false)
+
+// return true
 
 
+/* Function that checks if the input is already present in the column */
+bool check_col(const char board[9][9], int col){
   
 //}
 
