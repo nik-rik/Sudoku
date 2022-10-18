@@ -113,7 +113,7 @@ bool make_move(const char *position, const int digit, char board[9][9]){
     return false;
 
   // Checks if position is already filled in
-  if (contains_num(board, input_row_array_number, input_column_array_number) == true)
+  if (contains_num(board, input_row_array_number, input_column_array_number))
       return false;
 
 
