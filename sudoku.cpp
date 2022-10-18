@@ -107,7 +107,7 @@ bool contains_num(const char board[9][9], int row, int col){
 
 
 /* Function that checks if the input is already present in the column */
-bool check_col(const char board[9][9], int col){
+//bool check_col(const char board[9][9], int col){
   
 //}
 
