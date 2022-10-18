@@ -1,9 +1,12 @@
 #include <iostream>
 #include <cstdio>
 #include "sudoku.h"
+#include <cstring>
+#include <cassert>
 
 using namespace std;
 
+bool make_move(const char *position, const int digit, char board[9][9]);
 
 int main() {
 
@@ -36,13 +39,13 @@ int main() {
   }
   cout << "complete.\n\n";
 
-  /*cout << "=================== Question 2 ===================\n\n";
+  cout << "=================== Question 2 ===================\n\n";
 
   load_board("easy.dat", board);
 
   // Should be OK
   cout << "Putting '1' into I8 is ";
-  if (!make_move("I8", '1', board)) {
+  if (!make_move("I6", '1', board)) {
     cout << "NOT ";
   }
   cout << "a valid move. The board is:\n";
@@ -50,7 +53,7 @@ int main() {
 
   // write more tests
 
-  cout << "=================== Question 3 ===================\n\n";
+  /*cout << "=================== Question 3 ===================\n\n";
 
   load_board("easy.dat", board);
   if (save_board("easy-copy.dat", board)) {
@@ -88,4 +91,21 @@ int main() {
 
   return 0;
 }
-	
+
+
+bool make_move(const char *position, const int digit, char board[9][9]){
+  if (strlen(position) != 2)
+    return false;
+
+  if (*position < 65 || *position > 73)
+    return false;
+  
+  if (*(position + 1) < 49 || *(position + 1) > 57)
+    return false;
+  
+  assert(contains_num(board, *position - '@', *(position + 1) - '0') == true);
+
+
+  return true;
+}
+  

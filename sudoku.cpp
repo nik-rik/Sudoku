@@ -86,7 +86,7 @@ bool is_complete(const char board[9][9]) {
 
 /* Function to check if a space already contains a number from 1-9 */
 bool contains_num(const char board[9][9], int row, int col){
-  if (board[row][col] < 49 || board[row][col] > 57)
+  if (board[row][col] < '1' || board[row][col] > '9')
     return false;
   return true;
 }
@@ -95,19 +95,10 @@ bool contains_num(const char board[9][9], int row, int col){
 /* Function that places a digit onto the board */
 //bool make_move(const char *position, char digit, char board[9][9]){
 
-  // check if the position is already occupied by another character (function), if true then return invalid (false) 
-
-// check if the number is already present in the column (function), if true then return invalid (false)
-
-// check if the number is already present in the row (function), if true then return invalid (false)
-
-// check if the number is already present in the box (function), if true then return invalid (false)
-
-// return true
-
+  
 
 /* Function that checks if the input is already present in the column */
-bool check_col(const char board[9][9], int col){
+//bool check_col(const char board[9][9], int col){
   
 //}
 
