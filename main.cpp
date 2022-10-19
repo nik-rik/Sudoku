@@ -1,15 +1,9 @@
 #include <iostream>
 #include <cstdio>
 #include "sudoku.h"
-#include <cstring>
-#include <cassert>
-#include <fstream>
+
 
 using namespace std;
-
-bool make_move(const char *position, const int digit, char board[9][9]);
-bool save_board(const char* filename, char board[9][9]);
-
 
 
 int main() {
@@ -97,92 +91,5 @@ int main() {
 }
 
 
-bool make_move(const char *position, const int digit, char board[9][9]){
-  // Checks for validity of position input
-  // Checks if string is correct length
-  if (strlen(position) != 2)
-    return false;
 
-  int input_row_array_number = (*position - '@') - 1;
-  int input_column_array_number = ((*(position + 1) - '0') - 1);
-  int input_digit = digit - '0';
-
-  
-  // Checks if row is within parameters
-  if (input_row_array_number < 0 || input_row_array_number > 8)
-    return false;
-
-  // Checks if column is within parameters
-  if (input_column_array_number < 0 || input_column_array_number > 8)
-    return false;
-
-  // Checks if position is already filled in
-  if (contains_num(board, input_row_array_number, input_column_array_number))
-      return false;
-
-
-
-  // Checks for validity of digit input
-  // Checks if digit is within parameters
-  if (input_digit < 1)
-    return false;
-
-
-
-  // Checks if move is logically correct
-  // Checks if number already exists in column
-  for (int row = 0; row < 9; row++)
-    if (board[row][input_column_array_number] - '0' == input_digit)
-      return false;
- 
-  // Checks if number already exists in row
-  for (int col = 0; col < 9; col++)
-    if (board[input_row_array_number][col] - '0' == input_digit)
-      return false;
-
-  // Checks if number already exists in box
-  int start_row = input_row_array_number - input_row_array_number % 3, start_col = input_column_array_number - input_column_array_number % 3;
-
-  for (int row = 0; row < 3; row++)
-    for (int col = 0; col < 3; col++)
-      if (board[row + start_row][col + start_col] - '0' == input_digit)
-	return false;
-  
-
-  // Updates board
-  board[input_row_array_number][input_column_array_number] = digit;
-
-  
-  return true;
-}
-  
-
-/* Function that saves board */
-bool save_board(const char *filename, char board[9][9]){
-  ofstream out;
-
-  const int MAX = 80;
-  char filename2[MAX];
-
-  strcpy (filename2, filename);
-
-  out.open(filename2);
-
-  if (out.fail())
-    return false;
-  
-  for(int row = 0; row < 9; row++){
-    for (int col = 0; col < 9; col++)
-      out.put(board[row][col]);
-    out << "\n";
-  }
-
-  out.close();
-
-  return true;
-
-}
-  
-    
-  
   
