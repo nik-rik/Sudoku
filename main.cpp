@@ -61,7 +61,7 @@ int main() {
   }
   cout << '\n';
 
-  /* cout << "=================== Question 4 ===================\n\n";
+  cout << "=================== Question 4 ===================\n\n";
 
   load_board("easy.dat", board);
   if (solve_board(board)) {
@@ -83,7 +83,7 @@ int main() {
 
   // write more tests
 
-  cout << "=================== Question 5 ===================\n\n";
+  /* cout << "=================== Question 5 ===================\n\n";
 
   // write more tests */
 

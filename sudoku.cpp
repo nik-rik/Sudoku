@@ -91,60 +91,33 @@ bool contains_num(const char board[9][9], int row, int col){
   return true;
 }
   
+/* Function to check if number can go in box for all boxes */
+bool move_safe_full(const char board[9][9], int row, int col, int num){
+  for (; row < 9; row++)
+    for (; col < 9; col++)
+      if (move_safe(board, row, col, num))
+	return true;
+  return false;
+}
 
-
-/*Function that places digit on board */
+/* Function that places digit on board */
 bool make_move(const char *position, const int digit, char board[9][9]){
-  // Checks for validity of position input
-  // Checks if string is correct length
-  if (strlen(position) != 2)
-    return false;
-
+ 
   int input_row_array_number = (*position - '@') - 1;
   int input_column_array_number = ((*(position + 1) - '0') - 1);
   int input_digit = digit - '0';
 
-  
-  // Checks if row is within parameters
-  if (input_row_array_number < 0 || input_row_array_number > 8)
+  // Checks for validity of position input
+  if (!position_input_check(position, input_row_array_number, input_column_array_number))
     return false;
-
-  // Checks if column is within parameters
-  if (input_column_array_number < 0 || input_column_array_number > 8)
-    return false;
-
-  // Checks if position is already filled in
-  if (contains_num(board, input_row_array_number, input_column_array_number))
-      return false;
-
-
 
   // Checks for validity of digit input
-  // Checks if digit is within parameters
-  if (input_digit < 1)
+  if (!digit_input_check(input_digit))
     return false;
 
-
-
   // Checks if move is logically correct
-  // Checks if number already exists in column
-  for (int row = 0; row < 9; row++)
-    if (board[row][input_column_array_number] - '0' == input_digit)
-      return false;
- 
-  // Checks if number already exists in row
-  for (int col = 0; col < 9; col++)
-    if (board[input_row_array_number][col] - '0' == input_digit)
-      return false;
-
-  // Checks if number already exists in box
-  int start_row = input_row_array_number - input_row_array_number % 3, start_col = input_column_array_number - input_column_array_number % 3;
-
-  for (int row = 0; row < 3; row++)
-    for (int col = 0; col < 3; col++)
-      if (board[row + start_row][col + start_col] - '0' == input_digit)
-	return false;
-  
+  if (!move_safe(board, input_row_array_number, input_column_array_number, input_digit))
+    return false;
 
   // Updates board
   board[input_row_array_number][input_column_array_number] = digit;
@@ -152,8 +125,89 @@ bool make_move(const char *position, const int digit, char board[9][9]){
   
   return true;
 }
-  
 
+/* Function that checks the position input is as required */
+bool position_input_check(const char *position, int row, int col){
+  // Checks if string is correct length
+  if (strlen(position) != 2)
+    return false;
+
+  // Checks if row is within parameters
+  if (row < 0 || row > 8)
+    return false;
+
+  // Checks if column is within parameters
+  if ( col < 0 || col > 8)
+    return false;
+
+  return true;
+}
+
+
+/* Function that checks the digit input is as required */
+bool digit_input_check(const int digit){
+  // Checks if digit is within parameters
+  if (digit < 1)
+    return false;
+
+  return true;
+}
+
+/* Function that checks if number already exists in column */
+bool already_in_col(const char board[9][9], int col, int digit){ 
+  for (int row = 0; row < 9; row++)
+    if (board[row][col] - '0' == digit)
+      return true;
+
+  return false;
+}
+
+
+/* Function that checks if number already exists in row */
+bool already_in_row(const char board[9][9], int row, int digit){
+  for (int col = 0; col < 9; col++)
+    if (board[row][col] - '0' == digit)
+      return true;
+
+  return false;
+
+}
+
+/* Function that checks if number already exists in box */
+bool already_in_box(const char board[9][9], int row, int col, int digit){
+ int start_row = row - row % 3, start_col = col - col % 3;
+
+  for (int r = 0; r < 3; r++)
+    for (int c = 0; c < 3; c++)
+      if (board[r + start_row][c + start_col] - '0' == digit)
+	return true;
+
+  return false;
+}
+
+/* Function that checks if position with digit is logically valid */
+bool move_safe(const char board[9][9], int row, int col, int digit){
+  // Checks if position is already filled in
+  if (contains_num(board, row, col))
+      return false;
+
+  // Checks if number already exists in column
+  if (already_in_col(board, col, digit))
+    return false;
+
+  // Checks if number already exists in row
+  if (already_in_row(board, row, digit))
+    return false;
+
+  // Checks if number already exists in box
+  if (already_in_box(board, row, col, digit))
+    return false;
+
+
+  return true;
+}
+
+ 
 /* Function that saves board */
 bool save_board(const char *filename, char board[9][9]){
   ofstream out;
@@ -181,4 +235,24 @@ bool save_board(const char *filename, char board[9][9]){
 }
   
 
+/* Function that solves board */
+bool solve_board(char board[9][9]){
+  int row = 0, col = 0;
+    
+  // base case
+  if(is_complete(board))
+    return true;
+
+  for (int i = 1; i <= 9; i++)
+    if(move_safe_full(board, row, col, i)){
+      // Updates board
+      board[row][col] = static_cast<char>(i);
+      if(solve_board(board))
+	return true;
+      board[row][col] = '.';
+    }
+  return false;
+}
+
+      
   
