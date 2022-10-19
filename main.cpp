@@ -3,10 +3,14 @@
 #include "sudoku.h"
 #include <cstring>
 #include <cassert>
+#include <fstream>
 
 using namespace std;
 
 bool make_move(const char *position, const int digit, char board[9][9]);
+bool save_board(const char* filename, char board[9][9]);
+
+
 
 int main() {
 
@@ -53,7 +57,7 @@ int main() {
 
   // write more tests
 
-  /*cout << "=================== Question 3 ===================\n\n";
+  cout << "=================== Question 3 ===================\n\n";
 
   load_board("easy.dat", board);
   if (save_board("easy-copy.dat", board)) {
@@ -63,7 +67,7 @@ int main() {
   }
   cout << '\n';
 
-  cout << "=================== Question 4 ===================\n\n";
+  /* cout << "=================== Question 4 ===================\n\n";
 
   load_board("easy.dat", board);
   if (solve_board(board)) {
@@ -151,4 +155,34 @@ bool make_move(const char *position, const int digit, char board[9][9]){
   
   return true;
 }
+  
+
+/* Function that saves board */
+bool save_board(const char *filename, char board[9][9]){
+  ofstream out;
+
+  const int MAX = 80;
+  char filename2[MAX];
+
+  strcpy (filename2, filename);
+
+  out.open(filename2);
+
+  if (out.fail())
+    return false;
+  
+  for(int row = 0; row < 9; row++){
+    for (int col = 0; col < 9; col++)
+      out.put(board[row][col]);
+    out << "\n";
+  }
+
+  out.close();
+
+  return true;
+
+}
+  
+    
+  
   
