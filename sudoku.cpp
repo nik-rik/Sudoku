@@ -4,6 +4,7 @@
 #include <cstring>
 #include <cassert>
 #include "sudoku.h"
+#include <chrono>
 
 using namespace std;
 
@@ -90,49 +91,41 @@ bool contains_num(const char board[9][9], int row, int col){
     return false;
   return true;
 }
-  
 
 
 /* Function that places digit on board */
 bool make_move(const char *position, const int digit, char board[9][9]){
- 
+  /* Coverts inputs into correct ASCII code representation */  
   int input_row_array_number = (*position - 'A');
   int input_column_array_number = (*(position + 1) - '1');
   int input_digit = digit - '0';
 
-  // Checks for validity of position input
-  if (!position_input_check(position, input_row_array_number, input_column_array_number))
+  if (!position_input_check(position, input_row_array_number, input_column_array_number)) // Checks for validity of position input
     return false;
 
-  // Checks for validity of digit input
-  if (!digit_input_check(input_digit))
+  if (!digit_input_check(input_digit)) // Checks for validity of digit input
     return false;
 
-  // Checks that the box is empty
-  if (contains_num(board, input_row_array_number, input_column_array_number))
+  if (contains_num(board, input_row_array_number, input_column_array_number))  // Checks that the box is empty
     return false;
 
-  // Checks if move is logically correct
-  if (!move_safe(board, input_row_array_number, input_column_array_number, input_digit))
+  if (!move_safe(board, input_row_array_number, input_column_array_number, input_digit))  // Checks if move is logically correct
     return false;
 
-  // Updates board
-  board[input_row_array_number][input_column_array_number] = digit;
+  board[input_row_array_number][input_column_array_number] = digit;  // Updates board if the previous checkes are passed
   return true;
 }
 
+
 /* Function that checks the position input is as required */
 bool position_input_check(const char *position, int row, int col){
-  // Checks if string is correct length
-  if (strlen(position) != 2)
+  if (strlen(position) != 2)  // Checks if string is correct length
     return false;
 
-  // Checks if row is within parameters
-  if (row < 0 || row > 8)
+  if (row < 0 || row > 8)  // Checks if row is within parameters
     return false;
 
-  // Checks if column is within parameters
-  if ( col < 0 || col > 8)
+  if ( col < 0 || col > 8)  // Checks if column is within parameters
     return false;
 
   return true;
@@ -141,12 +134,12 @@ bool position_input_check(const char *position, int row, int col){
 
 /* Function that checks the digit input is as required */
 bool digit_input_check(const int digit){
-  // Checks if digit is within parameters
   if (digit < 1 || digit > 9)
     return false;
 
   return true;
 }
+
 
 /* Function that checks if number already exists in column */
 bool already_in_col(const char board[9][9], int col, int digit){ 
@@ -168,9 +161,10 @@ bool already_in_row(const char board[9][9], int row, int digit){
 
 }
 
+
 /* Function that checks if number already exists in box */
 bool already_in_box(const char board[9][9], int row, int col, int digit){
- int start_row = row - row % 3, start_col = col - col % 3;
+  int start_row = row - row % 3, start_col = col - col % 3; //Used to determine the correct cell to start search at (i.e. first cell in box)
 
   for (int r = 0; r < 3; r++)
     for (int c = 0; c < 3; c++)
@@ -182,16 +176,13 @@ bool already_in_box(const char board[9][9], int row, int col, int digit){
 
 /* Function that checks if position with digit is logically valid */
 bool move_safe(const char board[9][9], int row, int col, int digit){
-  // Checks if number already exists in column
-  if (already_in_col(board, col, digit))
+  if (already_in_col(board, col, digit))  // Checks if number already exists in column
     return false;
 
-  // Checks if number already exists in row
-  if (already_in_row(board, row, digit))
+  if (already_in_row(board, row, digit))  // Checks if number already exists in row 
     return false;
 
-  // Checks if number already exists in box
-  if (already_in_box(board, row, col, digit))
+  if (already_in_box(board, row, col, digit))  // Checks if number already exists in box
     return false;
 
 
@@ -201,15 +192,16 @@ bool move_safe(const char board[9][9], int row, int col, int digit){
  
 /* Function that saves board */
 bool save_board(const char *filename, char board[9][9]){
-  ofstream out;
+  ofstream out; 
 
   const int MAX = 80;
   char filename_cpy[MAX];
 
+  /*Creates a file using filename input */
   strcpy(filename_cpy, filename);
-
   out.open(filename_cpy);
 
+  /* Outputs array to file if no error */ 
   if (out.fail())
     return false;
   
@@ -231,18 +223,18 @@ bool solve_board(char board[9][9]){
 
   int row, col;
   
-  // base case
-  if(!find_empty_box(board, row, col))
+  if(!find_empty_box(board, row, col))   // If there are now empty spaces then board is solved
     return true;
 
+  /* Checks whether each digit from 1-9 can be placed in cell */
   for (int i = 1; i <= 9; i++)
-    if(move_safe(board, row, col, i)){
-      // Updates board
-      board[row][col] = i + '0';
-      if(solve_board(board))
-	return true;
-      board[row][col] = '.';
+    if(move_safe(board, row, col, i)){    
+      board[row][col] = i + '0'; // If it can, board is tentatively updated
+      if(solve_board(board)) // Repeats process for next empty cell
+	return true; // If the board is complete then returns
+      board[row][col] = '.'; // If no number works in a cell, deletes tentative input and trys a different number for that cell
     }
+
   return false;
 }
 
@@ -256,8 +248,9 @@ bool find_empty_box(const char board[9][9], int &row, int &col) {
   return false;
 }
 
-int number_of_possible_values(const char board[9][9]){
 
+/* Functon to find the number of valus possible for a board */
+int number_of_possible_values(const char board[9][9]){
   int num = 0;
 
   for (int row = 0; row<9; row++)
@@ -271,6 +264,51 @@ int number_of_possible_values(const char board[9][9]){
 
 }
 
- 
+/* Function that solves board */
+bool solve_board2(char board[9][9], int &updates){
+
+  int row, col;
+  
+  // base case
+  if(!find_empty_box(board, row, col))
+    return true;
+  
+  for (int i = 1; i <= 9; i++)
+    if(move_safe(board, row, col, i)){
+      // Updates board
+      board[row][col] = i + '0';
+      updates++;
+      if(solve_board2(board, updates))
+	return true;
+      board[row][col] = '.';
+    }
+  return false;
+}
+
+/* Function to output metrics to test for difficulty of board */
+void difficulty_test(const char* filename, char board[9][9]){
+
+  char board_cpy[9][9];
+  int updates = 0;
+  load_board(filename, board);
+
+  for (int x=0 ; x < 9; x++)
+    for (int y=0 ; y < 9; y++)
+      board_cpy[x][y] = board[x][y];
+
+  cout << filename << " test statistics:\n";
+
+  cout << "Possible values from outset: " << number_of_possible_values(board) << "\n";
+
+  solve_board2(board_cpy, updates);
+  cout << "Number of board updates: " << updates << "\n";
+
+  auto begin = std::chrono::high_resolution_clock::now();
+  solve_board(board);
+  auto end = std::chrono::high_resolution_clock::now();
+  auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin);
+  cout << "Execution time (nanoseconds):" << elapsed.count() << "\n\n";
+
+}
 
 

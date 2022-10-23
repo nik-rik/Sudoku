@@ -176,24 +176,14 @@ int main() {
 
   cout << "=================== Question 5 ===================\n\n";
 
+  
   // write more tests
- load_board("easy.dat", board);
-  cout << "The easy board has: " << number_of_possible_values(board) << " possible values from the outset." << endl;
+  difficulty_test("easy.dat", board);
+  difficulty_test("medium.dat", board);
+  difficulty_test("mystery1.dat", board);
+  difficulty_test("mystery3.dat", board);
 
-  load_board("medium.dat", board);
-  cout << "The mystery3 board has: " << number_of_possible_values(board) << " possible values from the outset." << endl;
- 
-
-  load_board("mystery1.dat", board);
-  cout << "The mystery1 board has: " << number_of_possible_values(board) << " possible values from the outset." << endl;
-
-   load_board("mystery2.dat", board);
-  cout << "The mystery2 board has: " << number_of_possible_values(board) << " possible values from the outset." << endl;
   
-  load_board("mystery3.dat", board);
-  cout << "The mystery3 board has: " << number_of_possible_values(board) << " possible values from the outset." << endl;
-  
-
   return 0;
 }
 

@@ -16,6 +16,7 @@ bool move_safe(const char board[9][9], int row, int col, int digit);
 bool solve_board(char board[9][9]);
 bool find_empty_box(const char board[9][9], int &row, int &col);
 int number_of_possible_values(const char board[9][9]);
-
+bool solve_board2(char board[9][9], int &updates);
+void difficulty_test(const char* filename, char board[9][9]);
 
 #endif

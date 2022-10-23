@@ -1,1 +1,14 @@
 Summarise your findings here (see specification).
+
+The board that is impossible to solve is "mystery2".
+
+The board that is "extremely hard" to solve is "mystery1".
+The board that is "hard" to solve is "mystery3".
+
+This is because mystery1 has more possible values that can be placed
+in the cells at the start. Also, when being solved, mystery1 required
+more board updates (i.e. more nodes were opened that did not lead to
+the solution) and a longer execution time. Because all of these
+factors are indicators of difficulty (this is also seen when these
+statistics are compared between easy, medium, hard and extremely
+hard), we can conclude that mystery1 is harder than mystery2.
