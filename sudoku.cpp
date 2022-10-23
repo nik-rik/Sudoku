@@ -256,6 +256,21 @@ bool find_empty_box(const char board[9][9], int &row, int &col) {
   return false;
 }
 
+int number_of_possible_values(const char board[9][9]){
 
+  int num = 0;
+
+  for (int row = 0; row<9; row++)
+    for (int col = 0; col<9; col++)
+      if (!contains_num(board, row, col))
+	for (int i = 1; i <= 9; i++)
+	  if (move_safe(board, row, col, i))
+	    num++;
+
+  return num;
+
+}
+
+ 
 
 
