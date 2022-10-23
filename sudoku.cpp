@@ -91,14 +91,7 @@ bool contains_num(const char board[9][9], int row, int col){
   return true;
 }
   
-/* Function to check if number can go in box for all boxes */
-bool move_safe_full(const char board[9][9], int row, int col, int num){
-  for (; row < 9; row++)
-    for (; col < 9; col++)
-      if (move_safe(board, row, col, num))
-	return true;
-  return false;
-}
+
 
 /* Function that places digit on board */
 bool make_move(const char *position, const int digit, char board[9][9]){
@@ -121,8 +114,6 @@ bool make_move(const char *position, const int digit, char board[9][9]){
 
   // Updates board
   board[input_row_array_number][input_column_array_number] = digit;
-
-  
   return true;
 }
 
@@ -237,16 +228,17 @@ bool save_board(const char *filename, char board[9][9]){
 
 /* Function that solves board */
 bool solve_board(char board[9][9]){
-  int row = 0, col = 0;
-    
+
+  int row, col;
+  
   // base case
-  if(is_complete(board))
+  if(!find_empty_box(board, row, col))
     return true;
 
   for (int i = 1; i <= 9; i++)
-    if(move_safe_full(board, row, col, i)){
+    if(move_safe(board, row, col, i)){
       // Updates board
-      board[row][col] = static_cast<char>(i);
+      board[row][col] = i + '0';
       if(solve_board(board))
 	return true;
       board[row][col] = '.';
@@ -255,4 +247,20 @@ bool solve_board(char board[9][9]){
 }
 
       
+/* Function to check if number can go in box for all boxes */
+bool move_safe_full(const char board[9][9], int row, int col, int num){
+  for (; row < 9; row++)
+    for (; col < 9; col++)
+      if (move_safe(board, row, col, num))
+	return true;
+  return false;
+}
   
+/* Function to find the next empty square */
+bool find_empty_box(const char board[9][9], int &row, int &col) {
+  for (row = 0; row<9; row++)
+    for (col = 0; col<9; col++)
+      if (!contains_num(board, row, col))
+	return true;
+  return false;
+}

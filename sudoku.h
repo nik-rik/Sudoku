@@ -14,7 +14,7 @@ bool already_in_row(const char board[9][9], int row, int digit);
 bool already_in_box(const char board[9][9], int row, int col, int digit);
 bool move_safe(const char board[9][9], int row, int col, int digit);
 bool solve_board(char board[9][9]);
-
+bool find_empty_box(const char board[9][9], int &row, int &col);
 
 
 
