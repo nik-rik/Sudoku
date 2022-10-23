@@ -96,8 +96,8 @@ bool contains_num(const char board[9][9], int row, int col){
 /* Function that places digit on board */
 bool make_move(const char *position, const int digit, char board[9][9]){
  
-  int input_row_array_number = (*position - '@') - 1;
-  int input_column_array_number = ((*(position + 1) - '0') - 1);
+  int input_row_array_number = (*position - 'A');
+  int input_column_array_number = (*(position + 1) - '1');
   int input_digit = digit - '0';
 
   // Checks for validity of position input
@@ -106,6 +106,10 @@ bool make_move(const char *position, const int digit, char board[9][9]){
 
   // Checks for validity of digit input
   if (!digit_input_check(input_digit))
+    return false;
+
+  // Checks that the box is empty
+  if (contains_num(board, input_row_array_number, input_column_array_number))
     return false;
 
   // Checks if move is logically correct
@@ -138,7 +142,7 @@ bool position_input_check(const char *position, int row, int col){
 /* Function that checks the digit input is as required */
 bool digit_input_check(const int digit){
   // Checks if digit is within parameters
-  if (digit < 1)
+  if (digit < 1 || digit > 9)
     return false;
 
   return true;
@@ -178,10 +182,6 @@ bool already_in_box(const char board[9][9], int row, int col, int digit){
 
 /* Function that checks if position with digit is logically valid */
 bool move_safe(const char board[9][9], int row, int col, int digit){
-  // Checks if position is already filled in
-  if (contains_num(board, row, col))
-      return false;
-
   // Checks if number already exists in column
   if (already_in_col(board, col, digit))
     return false;
@@ -204,11 +204,11 @@ bool save_board(const char *filename, char board[9][9]){
   ofstream out;
 
   const int MAX = 80;
-  char filename2[MAX];
+  char filename_cpy[MAX];
 
-  strcpy (filename2, filename);
+  strcpy(filename_cpy, filename);
 
-  out.open(filename2);
+  out.open(filename_cpy);
 
   if (out.fail())
     return false;
@@ -246,15 +246,6 @@ bool solve_board(char board[9][9]){
   return false;
 }
 
-      
-/* Function to check if number can go in box for all boxes */
-bool move_safe_full(const char board[9][9], int row, int col, int num){
-  for (; row < 9; row++)
-    for (; col < 9; col++)
-      if (move_safe(board, row, col, num))
-	return true;
-  return false;
-}
   
 /* Function to find the next empty square */
 bool find_empty_box(const char board[9][9], int &row, int &col) {
@@ -264,3 +255,7 @@ bool find_empty_box(const char board[9][9], int &row, int &col) {
 	return true;
   return false;
 }
+
+
+
+
