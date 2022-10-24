@@ -134,7 +134,7 @@ bool position_input_check(const char *position, int row, int col){
 
 /* Function that checks the digit input is as required */
 bool digit_input_check(const int digit){
-  if (digit < 1 || digit > 9)
+  if (digit < 1 || digit > 9) // Checks if digit is withn parameters
     return false;
 
   return true;
@@ -143,8 +143,8 @@ bool digit_input_check(const int digit){
 
 /* Function that checks if number already exists in column */
 bool already_in_col(const char board[9][9], int col, int digit){ 
-  for (int row = 0; row < 9; row++)
-    if (board[row][col] - '0' == digit)
+  for (int row = 0; row < 9; row++) // Goes through each row in a column
+    if (board[row][col] - '0' == digit) // Returns true if there is a number that matches digit
       return true;
 
   return false;
@@ -153,8 +153,8 @@ bool already_in_col(const char board[9][9], int col, int digit){
 
 /* Function that checks if number already exists in row */
 bool already_in_row(const char board[9][9], int row, int digit){
-  for (int col = 0; col < 9; col++)
-    if (board[row][col] - '0' == digit)
+  for (int col = 0; col < 9; col++) // Goes through each column in a row
+    if (board[row][col] - '0' == digit) // Returns true if there is a number that matches digit
       return true;
 
   return false;
@@ -164,11 +164,11 @@ bool already_in_row(const char board[9][9], int row, int digit){
 
 /* Function that checks if number already exists in box */
 bool already_in_box(const char board[9][9], int row, int col, int digit){
-  int start_row = row - row % 3, start_col = col - col % 3; //Used to determine the correct cell to start search at (i.e. first cell in box)
+  int start_row = row - row % 3, start_col = col - col % 3; // Used to determine the correct cell to start search at (i.e. first cell in box)
 
-  for (int r = 0; r < 3; r++)
+  for (int r = 0; r < 3; r++) // Searches a 3 x 3 box
     for (int c = 0; c < 3; c++)
-      if (board[r + start_row][c + start_col] - '0' == digit)
+      if (board[r + start_row][c + start_col] - '0' == digit) // Uses the start variables to check the correct box for matches
 	return true;
 
   return false;
@@ -223,19 +223,19 @@ bool solve_board(char board[9][9]){
 
   int row, col;
   
-  if(!find_empty_box(board, row, col))   // If there are now empty spaces then board is solved
-    return true;
+  if(!find_empty_box(board, row, col))   // This is passed by reference to the function so the proceeding check happens at an empty box
+    return true;                         // If there are no empty boxes then the board is solved
 
   /* Checks whether each digit from 1-9 can be placed in cell */
   for (int i = 1; i <= 9; i++)
     if(move_safe(board, row, col, i)){    
-      board[row][col] = i + '0'; // If it can, board is tentatively updated
+      board[row][col] = i + '0'; // If digit can be placed, board is tentatively updated
       if(solve_board(board)) // Repeats process for next empty cell
 	return true; // If the board is complete then returns
       board[row][col] = '.'; // If no number works in a cell, deletes tentative input and trys a different number for that cell
     }
 
-  return false;
+  return false; // This causes the function to backtrack if no digit can fit in a a box
 }
 
   
@@ -243,41 +243,48 @@ bool solve_board(char board[9][9]){
 bool find_empty_box(const char board[9][9], int &row, int &col) {
   for (row = 0; row<9; row++)
     for (col = 0; col<9; col++)
-      if (!contains_num(board, row, col))
+      if (!contains_num(board, row, col)) //Checks each box to see if it contains a number
 	return true;
   return false;
 }
 
 
-/* Functon to find the number of valus possible for a board */
+/* Functon to find the number of valus possible for a board at outset*/
 int number_of_possible_values(const char board[9][9]){
+
+  /* This finds the sum of the number of digits that can be placed in each cell at the beginning of the game.
+     If the sum is larger, this would indicate that the board is harder to complete as there are less clearly
+     solvable boxes */
+
   int num = 0;
 
   for (int row = 0; row<9; row++)
     for (int col = 0; col<9; col++)
-      if (!contains_num(board, row, col))
+      if (!contains_num(board, row, col)) // Checks each cell that is not pre-filled
 	for (int i = 1; i <= 9; i++)
-	  if (move_safe(board, row, col, i))
-	    num++;
+	  if (move_safe(board, row, col, i)) 
+	    num++; // Adds to count if a digit is a viable option
 
   return num;
 
 }
 
-/* Function that solves board */
+/* Function that solves board while also measuring the number of board updates made*/
 bool solve_board2(char board[9][9], int &updates){
 
+  /* More board updates would indicate a higher difficulty as the algorithm tried and failed on more node paths
+     However, it is not a perfect measure as ths could be influenced by the order of searches etc. It is 
+     important to include this in a different function so it does not influence the run-time measurement.*/
+  
   int row, col;
   
-  // base case
   if(!find_empty_box(board, row, col))
     return true;
   
   for (int i = 1; i <= 9; i++)
     if(move_safe(board, row, col, i)){
-      // Updates board
       board[row][col] = i + '0';
-      updates++;
+      updates++; // This increments when a board update is made (only difference from "solve_board")
       if(solve_board2(board, updates))
 	return true;
       board[row][col] = '.';
@@ -294,7 +301,7 @@ void difficulty_test(const char* filename, char board[9][9]){
 
   for (int x=0 ; x < 9; x++)
     for (int y=0 ; y < 9; y++)
-      board_cpy[x][y] = board[x][y];
+      board_cpy[x][y] = board[x][y]; // Makes copy of board so it does not have to be loaded twice (
 
   cout << filename << " test statistics:\n";
 
@@ -303,11 +310,14 @@ void difficulty_test(const char* filename, char board[9][9]){
   solve_board2(board_cpy, updates);
   cout << "Number of board updates: " << updates << "\n";
 
-  auto begin = std::chrono::high_resolution_clock::now();
+  /* This measures the runtime of the solve_board function for a specific board. Higher runtime 
+     indicates higher difficulty. However this is also imperfect as it could be due to the orders
+     that the algorithm searches in. */
+  auto begin = std::chrono::high_resolution_clock::now(); // Starts timer
   solve_board(board);
-  auto end = std::chrono::high_resolution_clock::now();
-  auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin);
-  cout << "Execution time (nanoseconds):" << elapsed.count() << "\n\n";
+  auto end = std::chrono::high_resolution_clock::now(); // Ends timer
+  auto elapsed = std::chrono::duration_cast<std::chrono::nanoseconds>(end - begin); 
+  cout << "Execution time (nanoseconds):" << elapsed.count() << "\n\n"; // Timer output in nanoseconds
 
 }
 
