@@ -146,7 +146,7 @@ int main() {
   cout << '\n';
 
   // write more tests
-  load_board("mystery1.dat", board);
+  load_board("mystery1.dat", board); // Tests mystery board 1
   if (solve_board(board)) {
     cout << "The 'mystery1' board has a solution:\n";
     display_board(board);
@@ -155,7 +155,7 @@ int main() {
   }
   cout << '\n';
 
-  load_board("mystery2.dat", board);
+  load_board("mystery2.dat", board); // Tests mystery board 2
   if (solve_board(board)) {
     cout << "The 'mystery2' board has a solution:\n";
     display_board(board);
@@ -164,7 +164,7 @@ int main() {
   }
   cout << '\n';
 
-  load_board("mystery3.dat", board);
+  load_board("mystery3.dat", board); // Tests myster board 3
   if (solve_board(board)) {
     cout << "The 'mystery3' board has a solution:\n";
     display_board(board);
@@ -178,6 +178,8 @@ int main() {
 
   
   // write more tests
+
+  /* Outputs test statistcs for each of the solvable board */
   difficulty_test("easy.dat", board);
   difficulty_test("medium.dat", board);
   difficulty_test("mystery1.dat", board);
