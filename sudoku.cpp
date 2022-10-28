@@ -269,12 +269,11 @@ int number_of_possible_values(const char board[9][9]){
 
 }
 
-/* Function that solves board while also measuring the number of board updates made*/
-bool solve_board2(char board[9][9], int &updates){
+/* Function that solves board while also measuring the number of board updates made by overloading solve_board*/
+bool solve_board(char board[9][9], int &updates){
 
   /* More board updates would indicate a higher difficulty as the algorithm tried and failed on more node paths
-     However, it is not a perfect measure as ths could be influenced by the order of searches etc. It is 
-     important to include this in a different function so it does not influence the run-time measurement.*/
+     However, it is not a perfect measure as ths could be influenced by the order of searches etc.*/
   
   int row, col;
   
@@ -285,7 +284,7 @@ bool solve_board2(char board[9][9], int &updates){
     if(move_safe(board, row, col, i)){
       board[row][col] = i + '0';
       updates++; // This increments when a board update is made (only difference from "solve_board")
-      if(solve_board2(board, updates))
+      if(solve_board(board, updates))
 	return true;
       board[row][col] = '.';
     }
@@ -307,7 +306,7 @@ void difficulty_test(const char* filename, char board[9][9]){
 
   cout << "Possible values from outset: " << number_of_possible_values(board) << "\n";
 
-  solve_board2(board_cpy, updates);
+  solve_board(board_cpy, updates);
   cout << "Number of board updates: " << updates << "\n";
 
   /* This measures the runtime of the solve_board function for a specific board. Higher runtime 
